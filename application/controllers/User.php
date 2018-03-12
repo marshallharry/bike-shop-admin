@@ -66,4 +66,17 @@ class User extends CI_Controller {
 		$user = $this->User_model->update_profile($id, $username, md5($password_new));
 		redirect('/user/profile', 'refresh');
 	}
+	
+	public function validate_password() {
+		$password = $_POST['password'];
+		$id = $_SESSION['userID'];
+		
+		$user = $this->User_model->validate_password($id, md5($password));
+		if (!empty($user)) {
+			echo 'true';
+		}
+		else {
+			echo 'false';
+		}
+	}
 }

@@ -20,6 +20,13 @@ class User_model extends CI_Model {
 		$result = $query->result();
 		return $result;
 	}
+	
+	public function validate_password($id, $password)
+	{
+		$query = $this->db->get_where('user', array('ID' => $id, 'Password' => $password));
+		$result = $query->result();
+		return $result;
+	}
 
 	public function get_user_by_id($id)
 	{

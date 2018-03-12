@@ -138,7 +138,7 @@
                                                 echo number_format($total);
                                                 echo "</td>";
                                                 echo '<td style="text-align:center">';
-                                                echo '<a href="'.$baseUrl.'pengeluaran/remove/'.$res->ID.'">';
+                                                echo '<a href="#" onClick="return confirmDelete('.$res->ID.')" >';
                                                 echo '<img src="'.$baseUrl.'assets/images/delete.png" alt="delete" height="30" width="30" >';
                                                 echo '</a>';
                                                 echo "</td>";
@@ -186,6 +186,24 @@
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script> 
     <script src="<?php echo base_url(); ?>assets/js/jquery-validation-custom.js"></script>
     <script>
+	function confirmDelete(id) {
+		var password = prompt("Mohon masukkan password", "");
+
+		if (password != null) {
+			$.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
+				if(result == "true") {
+					$.post("<?= $baseUrl.'pengeluaran/remove/' ?>"+id, function(data){
+						alert("Sukses. Halaman ini akan di 'refresh'.");
+						location.reload();
+					});
+				}
+				else {
+					alert("Password tidak sesuai.");
+				}
+			});
+		}
+	};
+	
     function pilihJenis(data)
     {
        var total = parseInt(data.value);
