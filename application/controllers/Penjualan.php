@@ -117,6 +117,7 @@ class Penjualan extends MY_Controller {
 							$this->Barang_model->remove_stock_barang($idbaru, $amountbaru);
 						}
 						else {
+							$stockbaru -= $amountbaru;
 							$idbaru = $this->Barang_model->add_barang($namabaru, $modalbaru, $stockbaru);
 						}
 					    

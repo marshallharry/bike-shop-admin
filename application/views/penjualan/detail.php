@@ -116,7 +116,7 @@
                                                     echo '<button class="cartForm" id="'.$id.'" name="'.$id.'" onclick="addtocart(this);return false;" >>></button>';
                                                     echo "</td>";
                                                     echo '<td style="text-align:center">';
-                                                    echo '<a href="'.$baseUrl.'penjualan/remove_detail/'.$headerid.'/'.$id.' ">';
+                                                    echo '<a href="#" onClick="return confirmDelete('.$id.','.$headerid.')" >';
                                                     echo '<img src="'.$baseUrl.'assets/images/delete.png" alt="delete" height="30" width="30" >';
                                                     echo '</a>';
                                                     echo "</td>";
@@ -275,6 +275,24 @@
                 $('#txAmount'+id).prop("disabled",true);  
                 $('#'+id).prop("disabled",true); 
             } 
+        };
+
+        function confirmDelete(id, headerid) {
+            var password = prompt("Mohon masukkan password", "");
+
+            if (password != null) {
+                $.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
+                    if(result == "true") {
+                        $.post("<?= $baseUrl.'penjualan/remove_detail/' ?>"+headerid+"/"+id, function(data){
+                            alert("Sukses. Halaman ini akan di 'refresh'.");
+                            location.reload();
+                        });
+                    }
+                    else {
+                        alert("Password tidak sesuai.");
+                    }
+                });
+            }
         };
 
         function removeCart(id)

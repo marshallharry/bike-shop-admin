@@ -77,9 +77,9 @@
                                             }
                                             echo '<tr class="'.$class.'">';                        
                                                 echo '<td>';
-                                                echo '<a href="'.$baseUrl.'barang/edit/'.$res->ID.'" >';
+                                                //echo '<a href="'.$baseUrl.'barang/edit/'.$res->ID.'" >';
                                                 echo $res->Nama;
-                                                echo '</a>';
+                                                //echo '</a>';
                                                 echo "</td>";
                                                 echo '<td>';
                                                 echo number_format($res->Modal);
