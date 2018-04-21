@@ -93,8 +93,10 @@ class Pembelian extends MY_Controller {
 			$lunas = "lunas";
 			$tempo = 0;
 			$lunasdate = $buydate;
+			$payment = "tunai";
 		}
 		else {
+			$payment = "non";
 			$lunas = "belum";
 			$lunasdate = null;
 			if($_POST['txTempo'] != ""){
@@ -124,7 +126,7 @@ class Pembelian extends MY_Controller {
 		else
 		{
 			$grandTotal = 0;
-			$headerid = $this->Pembelian_model->add_header_pembelian($supplier, $buydate, $tempo, $grandTotal, $lunas, $lunasdate);
+			$headerid = $this->Pembelian_model->add_header_pembelian($supplier, $buydate, $tempo, $grandTotal, $lunas, $lunasdate, $payment);
 
 			if($headerid === -1) {
 				$_SESSION['error_msg'] = "Database error, Header ID = -1.";
@@ -172,8 +174,9 @@ class Pembelian extends MY_Controller {
 	public function lunas() {
 		$id = $_POST['txID'];
 		$tanggal = $_POST['txDate'];
+		$payment = $_POST['payment'];
 
-		$this->Pembelian_model->paid_off($id, $tanggal);
+		$this->Pembelian_model->paid_off($id, $tanggal, $payment);
 		redirect('/pembelian/view/'.$id, 'refresh');
 	}
 

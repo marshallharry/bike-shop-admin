@@ -51,6 +51,13 @@
                                         <label>Total</label>
                                         <input class="form-control" id="total" name="total" >
                                     </div>
+                                    <div class="form-group">
+                                        <label>Pilih Pembayaran</label>
+                                        <select class="form-control" id="payment" name="payment" >
+                                            <option value="cash">Cash</option>
+                                            <option value="transfer">Transfer</option>
+                                        </select>
+                                    </div>
                                     <button type="submit" class="btn btn-default">Submit</button>
                                     <button type="reset" class="btn btn-default">Reset</button>
                                 </form>
@@ -111,6 +118,7 @@
                                         <th >Tanggal</th>
                                         <th >Keterangan</th>
                                         <th >Total</th>
+                                        <th >Pembayaran</th>
                                         <th >Hapus</th>
                                     </tr>
                                 </thead>
@@ -136,6 +144,9 @@
                                                 echo "</td>";
                                                 echo '<td>';
                                                 echo number_format($total);
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo $res->Payment;
                                                 echo "</td>";
                                                 echo '<td style="text-align:center">';
                                                 echo '<a href="#" onClick="return confirmDelete('.$res->ID.')" >';

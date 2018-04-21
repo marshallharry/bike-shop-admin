@@ -59,14 +59,15 @@ class Pembelian_model extends CI_Model {
 		return $result;
 	}
 
-    public function add_header_pembelian($supplier, $buydate, $tempo, $grandTotal, $lunas, $lunasdate) {
+    public function add_header_pembelian($supplier, $buydate, $tempo, $grandTotal, $lunas, $lunasdate, $payment) {
     	$param = array(
 			'Nama_Supplier' => $supplier,
 			'Tanggal_Beli' => $buydate,
 			'Jatuh_Tempo' => $tempo,
 			'Total' => $grandTotal,
 			'Status' => $lunas,
-			'Tanggal_Lunas' => $lunasdate
+			'Tanggal_Lunas' => $lunasdate,
+			'Payment' => $payment
 			);
 		$this->db->insert('header_pembelian', $param);	
 		$insert_id = $this->db->insert_id();
@@ -92,10 +93,11 @@ class Pembelian_model extends CI_Model {
 		$this->db->update('header_pembelian', $param); 
     }
 
-    public function paid_off($id, $tanggal) {
+    public function paid_off($id, $tanggal, $payment) {
     	$param = array(
 			'Tanggal_Lunas' => $tanggal,
-			'Status' => 'lunas'
+			'Status' => 'lunas',
+			'Payment' => $payment
 			);
 		$this->db->where('ID', $id);
 		$this->db->update('header_pembelian', $param); 

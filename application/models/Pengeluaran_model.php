@@ -58,12 +58,13 @@ class Pengeluaran_model extends CI_Model {
 		$this->db->update('tipe_pengeluaran', $param); 
 	}
 
-	public function add_pengeluaran($tanggal, $keterangan, $total)
+	public function add_pengeluaran($tanggal, $keterangan, $total, $payment)
 	{
 		$param = array(
 			'Tanggal' => $tanggal,
 			'Keterangan' => $keterangan,
-			'Total' => $total
+			'Total' => $total,
+			'Payment' => $payment
 			);
 		$this->db->insert('pengeluaran',	$param);	
 		$insert_id = $this->db->insert_id();

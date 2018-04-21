@@ -79,7 +79,8 @@
                                     <tr>
                                         <th >Tanggal</th>
                                         <th >Penjualan Kotor</th>
-                                        <th >Pembayaran Barang</th>
+                                        <th >Pembayaran Tunai</th>
+                                        <th >Pembayaran Non Tunai</th>
                                         <th >Pengeluaran</th>
                                         <th >Setor/Debit</th>
                                     </tr>
@@ -89,6 +90,7 @@
                                         $count = 1;   
                                         $totalJual = 0;
                                         $totalBayar = 0;
+                                        $totalBayarTunai = 0;
                                         $totalBiaya = 0;
                                         $totalSetor = 0;            
                                         foreach($result as $res){
@@ -100,6 +102,7 @@
                                             }
                                             $jual = $res->Jual;
                                             $bayar = $res->Bayar;
+                                            $bayarTunai = $res->Bayar_Tunai;
                                             $biaya = $res->Biaya;
                                             $setor = $res->Setor;
 
@@ -107,6 +110,7 @@
                                             $totalSetor += $setor;
                                             $totalBiaya += $biaya;
                                             $totalBayar += $bayar;
+                                            $totalBayarTunai += $bayarTunai;
 
                                             echo '<tr class="'.$class.'">';                        
                                                 echo '<td>';
@@ -114,6 +118,9 @@
                                                 echo "</td>";
                                                 echo '<td>';
                                                 echo number_format($jual);
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo number_format($bayarTunai);
                                                 echo "</td>";
                                                 echo '<td>';
                                                 echo number_format($bayar);
@@ -128,7 +135,7 @@
                                             $count++;    
                                         }  
 
-                                        $sisaOmset = $totalJual - $totalBayar - $totalBiaya;
+                                        $sisaOmset = $totalJual - $totalBayar - $totalBiaya - $totalBayarTunai;
 
                                         echo '<tr>';
                                             echo '<td>';
@@ -136,6 +143,9 @@
                                             echo '</td>';
                                             echo '<td><b>';
                                             echo number_format($totalJual);
+                                            echo '</b></td>';
+                                            echo '<td><b>';
+                                            echo number_format($totalBayarTunai);
                                             echo '</b></td>';
                                             echo '<td><b>';
                                             echo number_format($totalBayar);

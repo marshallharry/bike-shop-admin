@@ -87,13 +87,14 @@ class Laporan_model extends CI_Model {
 				"Result.Tanggal, ".
 				"SUM(Result.Penjualan) AS Jual, ".
 				"SUM(Result.Pembayaran) AS Bayar, ".
+				"SUM(Result.Pembayaran_Tunai) AS Bayar_Tunai, ".
 				"SUM(Result.Setor) AS Setor, ".
 				"SUM(Result.Biaya) AS Biaya ".
 				"FROM ".
 				"( ".
 				"SELECT ".
 				"hp.Tanggal, ".
-				"SUM(hp.Total) AS Penjualan, 0 AS Pembayaran, 0 AS Setor, 0 AS Biaya ".
+				"SUM(hp.Total) AS Penjualan, 0 AS Pembayaran, 0 AS Pembayaran_Tunai, 0 AS Setor, 0 AS Biaya ".
 				"FROM header_penjualan hp ".
 				"WHERE MONTH(hp.Tanggal) = ".$month." AND YEAR(hp.Tanggal) = ".$year." ".
 				"GROUP BY hp.Tanggal ";	
@@ -101,7 +102,7 @@ class Laporan_model extends CI_Model {
 		$sql = $sql."UNION ".
 					"SELECT ".
 					"tnt.Tanggal, 0 AS Penjualan, ".
-					"SUM(IF(tnt.Status = 'Tarik/Transfer', tnt.Jumlah, 0)) AS Pembayaran, ".
+					"SUM(IF(tnt.Status = 'Tarik/Transfer', tnt.Jumlah, 0)) AS Pembayaran, 0 AS Pembayaran_Tunai, ".
 					"SUM(IF(tnt.Status = 'Setor/Debit', tnt.Jumlah, 0)) AS Setor, 0 AS Biaya ".
 					"FROM transaksi_non_tunai tnt ".
 					"WHERE MONTH(tnt.Tanggal) = ".$month." AND YEAR(tnt.Tanggal) = ".$year." ".
@@ -110,7 +111,8 @@ class Laporan_model extends CI_Model {
 		$sql = $sql."UNION ".
 					"SELECT ".
 					"hp.Tanggal_Lunas, 0 AS Penjualan, ".
-					"SUM(IF(hp.Status = 'lunas', hp.Total, 0)) AS Pembayaran, ".
+					"SUM(IF(hp.Status = 'lunas' AND hp.Payment = 'non', hp.Total, 0)) AS Pembayaran, ".
+					"SUM(IF(hp.Status = 'lunas' AND hp.Payment = 'tunai', hp.Total, 0)) AS Pembayaran_Tunai, ".
 					"0 AS Setor, 0 AS Biaya ".
 					"FROM header_pembelian hp ".
 					"WHERE MONTH(hp.Tanggal_Lunas) = ".$month." AND YEAR(hp.Tanggal_Lunas) = ".$year." ".
@@ -118,7 +120,7 @@ class Laporan_model extends CI_Model {
 
 		$sql = $sql."UNION ".
 					"SELECT ".
-					"p.Tanggal, 0 AS Penjualan, 0 AS Pembayaran, 0 AS Setor, SUM(p.Total) AS Biaya ".
+					"p.Tanggal, 0 AS Penjualan, 0 AS Pembayaran, 0 AS Pembayaran_Tunai, 0 AS Setor, SUM(IF(p.Payment = 'cash', p.Total, 0)) AS Biaya ".
 					"FROM pengeluaran p ".
 					"WHERE MONTH(p.Tanggal) = ".$month." AND YEAR(p.Tanggal) = ".$year." ".
 					"GROUP BY p.Tanggal ";

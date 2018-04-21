@@ -45,6 +45,9 @@
                                             <div class="form-group">
                                                 <label>Tanggal Lunas : <?= $header->Tanggal_Lunas ?></label>
                                             </div>
+                                            <div class="form-group">
+                                                <label>Pembayaran : <?= $header->Tanggal_Lunas === 'tunai'? 'Tunai' : 'Non Tunai' ?></label>
+                                            </div>
                                         <?php 
                                         }
                                         else {
@@ -52,6 +55,13 @@
                                             <div class="form-group">
                                                 <label>Tanggal Lunas</label>
                                                 <input class="form-control" id="txDate" name="txDate" value="<?= date('Y-m-d') ?>" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Pilih Pembayaran</label>
+                                                <select class="form-control" id="payment" name="payment" >
+                                                    <option value="tunai">Tunai</option>
+                                                    <option value="non">Non Tunai</option>
+                                                </select>
                                             </div>
                                             <input type="hidden" value="<?= $headerid ?>" name="txID" id="txID" />
                                             <button type="submit" class="btn btn-default">Submit</button>
@@ -311,6 +321,11 @@
             $('input').removeAttr('disabled', 'disabled');
             $('button').removeAttr('disabled', 'disabled');
         };
+
+        $(document).ready(function() {
+            $( "#txDate" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+        });
+    });
     </script>
 <?php
 	$this->load->view('footer');

@@ -49,8 +49,9 @@ class Pengeluaran extends MY_Controller {
 				$tanggal = $_POST['tanggal'];
 				$keterangan = $_POST['keterangan'];
 				$total = $_POST['total'];
+				$payment = $_POST['payment'];
 
-				$this->Pengeluaran_model->add_pengeluaran($tanggal, $keterangan, $total);
+				$this->Pengeluaran_model->add_pengeluaran($tanggal, $keterangan, $total, $payment);
 				redirect('/pengeluaran/view', 'refresh');
 			}
 		}
