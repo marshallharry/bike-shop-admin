@@ -228,6 +228,7 @@
     <script src="<?php echo base_url(); ?>assets/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/vendor/datatables-responsive/dataTables.responsive.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script> 
+    <script src="<?php echo base_url(); ?>assets/js/jquery-validation-custom.js"></script>
     <script>
         function addtocart(ref) { 
             id = ref.id;        
@@ -325,7 +326,6 @@
         $(document).ready(function() {
             $( "#txDate" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         });
-    });
     </script>
 <?php
 	$this->load->view('footer');
