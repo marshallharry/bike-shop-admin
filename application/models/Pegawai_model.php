@@ -155,6 +155,57 @@ class Pegawai_model extends CI_Model {
 	public function remove_hutang($id) {
 		$this->db->delete('hutang', array('ID' => $id));
 	}
+
+	public function add_hutang_barang($id, $tanggal, $jumlah, $barangId, $nama, $modal, $harga)
+	{
+		$param = array(
+			'Pegawai_ID' => $id,
+			'Tanggal' => $tanggal,
+			'Jumlah' => $jumlah,
+			'Status' => 'belum',
+			'Barang_ID' => $barangId,
+			'Nama_Barang' => $nama,
+			'Modal' => $modal,
+			'Harga' => $harga
+			);
+		$this->db->insert('hutang_barang', $param);
+	}
+
+	public function get_hutang_barang($id)
+	{
+		$query = $this->db->get_where('hutang_barang', array('Pegawai_ID' => $id));
+		$result = $query->result();		
+		
+		return $result;
+	}
+
+	public function get_hutang_barang_by_id($id)
+	{
+		$query = $this->db->get_where('hutang_barang', array('ID' => $id));
+		$result = $query->result();		
+		
+		return $result;
+	}
+
+	public function lunas_hutang_barang($id)
+	{
+		$param = array(
+			'Status' => 'lunas'
+			);
+		$this->db->where('ID', $id);
+		$this->db->update('hutang_barang', $param); 
+	}
+
+	public function get_total_hutang_barang($id)
+	{
+		$sql = " SELECT SUM(h.Harga) AS Total FROM `hutang_barang` h WHERE h.Pegawai_ID = ".$id." AND h.Status = 'belum' ";
+		$query = $this->db->query($sql);
+		return $query->result();
+	}
+
+	public function remove_hutang_barang($id) {
+		$this->db->delete('hutang_barang', array('ID' => $id));
+	}
 }
 
 ?>

@@ -7,6 +7,8 @@ class Pegawai extends MY_Controller {
 	function __construct() {
 		parent::__construct();   
 		$this->load->model('Pegawai_model');
+		$this->load->model('Barang_model');
+		$this->load->model('Penjualan_model');
 	}	
 
 	public function index($action = NULL) {		
@@ -49,14 +51,17 @@ class Pegawai extends MY_Controller {
 			$this->data['keterangan'] = '';
 		}
 		$this->data['tanggalHutang'] = date('Y-m-d');
+		$this->data['tanggalHutangBarang'] = date('Y-m-d');
 		$this->data['result'] = $this->Pegawai_model->get_pegawai($id);
 		$this->data['absensi'] = $this->Pegawai_model->get_absensi($id);
 		$this->data['hutang'] = $this->Pegawai_model->get_hutang($id);
+		$this->data['hutangBarang'] = $this->Pegawai_model->get_hutang_barang($id);
 		$total = $this->Pegawai_model->get_total_absen($id);
 		$this->data['totalMasuk'] = $total[0]->Total;
 
 		$hutang = $this->Pegawai_model->get_total_hutang($id);
-		$this->data['totalHutang'] = $hutang[0]->Total;
+		$hutang_barang = $this->Pegawai_model->get_total_hutang_barang($id);
+		$this->data['totalHutang'] = $hutang[0]->Total + $hutang_barang[0]->Total;
 		$this->load->view('pegawai/edit',$this->data);
 	}
 
@@ -151,5 +156,43 @@ class Pegawai extends MY_Controller {
 
 		$this->Pegawai_model->remove_pegawai($id);
 		redirect('/pegawai/', 'refresh');
+	}
+
+	public function add_hutang_barang($id) {
+		$tanggal = $_POST['tanggal_hutang_barang'];
+		$jumlah = $_POST['txJumlahBaru'];
+		$barangId = $_POST['txIDBaru'];
+		$nama = $_POST['txNamaBaru'];
+		$modal = $_POST['txModalBaru'];
+		$harga = $_POST['txJualBaru'];
+
+		$this->Pegawai_model->add_hutang_barang($id, $tanggal, $jumlah, $barangId, $nama, $modal, $harga);
+		$this->Barang_model->remove_stock_barang($barangId, $jumlah);
+		
+		redirect('/pegawai/edit/'.$id, 'refresh');
+	}
+
+	public function lunas_hutang_barang($pid, $id) {
+		$this->Pegawai_model->lunas_hutang_barang($id);	
+		$hutangs = $this->Pegawai_model->get_hutang_barang_by_id($id);
+		$hutang = $hutangs[0];
+		$grandTotal = $hutang->Jumlah * $hutang->Harga;
+		$grandModal = $hutang->Jumlah * $hutang->Modal;
+
+		$headerid = $this->Penjualan_model->add_header_penjualan(date('Y-m-d'), $grandTotal);
+		$this->Penjualan_model->add_detail_penjualan($hutang->Barang_ID, $hutang->Jumlah, $hutang->Harga, $headerid, $hutang->Modal, $hutang->Nama_Barang);
+		$this->Penjualan_model->update_header_penjualan_total($headerid, $grandTotal, $grandModal);
+		
+		redirect('/pegawai/edit/'.$pid, 'refresh');
+	}
+
+	public function remove_hutang_barang($pid, $id) {
+		$hutangs = $this->Pegawai_model->get_hutang_barang_by_id($id);
+		$hutang = $hutangs[0];
+
+		$this->Pegawai_model->remove_hutang_barang($id);
+		$this->Barang_model->add_stock_barang($hutang->Barang_ID, $hutang->Jumlah);	
+		
+		redirect('/pegawai/edit/'.$pid, 'refresh');
 	}
 }

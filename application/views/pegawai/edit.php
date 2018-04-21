@@ -154,6 +154,68 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Tambah Hutang Barang
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <form id="hutangBarangForm" action="<?= $baseUrl ?>pegawai/add_hutang_barang/<?= $url ?>" method="post" role="form">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Nama</label>
+                                            <input class="form-control" type="hidden" id="txIDBaru" name="txIDBaru" />
+                                            <input class="form-control" type="text" id="txNamaBaru" name="txNamaBaru" autocomplete="off" />
+                                            <ul class="dropdown-menu txtnama" style="margin-left:15px;margin-right:0px;" role="menu" aria-labelledby="dropdownMenu"  id="dropdown_barang"></ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label>Harga Modal</label>
+                                            <input class="form-control" type="text" id="txModalBaru" name="txModalBaru" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label>Tanggal</label>
+                                            <input class="form-control" id="tanggal_hutang_barang" name="tanggal_hutang_barang" value="<?= $tanggalHutang ?>" >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Jumlah</label>
+                                            <input class="form-control" type="text" id="txJumlahBaru" name="txJumlahBaru" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Harga Jual</label>
+                                            <input class="form-control" type="text" id="txJualBaru" name="txJualBaru" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label></label>
+                                            <button type="submit" class="btn btn-default">Submit</button>
+                                            <button type="reset" class="btn btn-default">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+            </div>
+
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -306,6 +368,95 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Daftar Hutang Barang
+                        </div>
+                        <!-- /.panel-heading -->
+                        <?php           
+                            if (!empty($hutangBarang)){
+                        ?>
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-hutang">
+                                <thead>
+                                    <tr>
+                                        <th >Tanggal</th>
+                                        <th >Status</th>
+                                        <th >Nama Barang</th>
+                                        <th >Jumlah</th>
+                                        <th >Harga Modal</th>
+                                        <th >Harga Jual</th>
+                                        <th >Hapus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php           
+                                        $count = 1;               
+                                        foreach($hutangBarang as $hut){
+                                            if($count%2 == 0) {
+                                                $class = "even";
+                                            }
+                                            else {
+                                                $class = "odd";
+                                            }
+                                            $id = $hut->ID;
+                                            echo '<tr class="'.$class.'">';                        
+                                                echo '<td>';
+                                                echo $hut->Tanggal;
+                                                echo "</td>";
+                                                echo '<td>';
+                                                if($hut->Status === 'lunas') {
+                                                    echo 'Lunas';
+                                                }
+                                                else {
+                                                    echo '<a href="'.$baseUrl.'pegawai/lunas_hutang_barang/'.$url.'/'.$id.'" >';
+                                                    echo 'Belum Lunas (Klik untuk melunasi)';
+                                                    echo '</a>';
+                                                }
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo $hut->Nama_Barang;
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo number_format($hut->Jumlah);
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo number_format($hut->Modal);
+                                                echo "</td>";
+                                                echo '<td>';
+                                                echo number_format($hut->Harga);
+                                                echo "</td>";
+                                                echo '<td style="text-align:center">';
+                                                
+                                                if($hut->Status === 'lunas') {
+                                                    echo '-';
+                                                }
+                                                else {
+                                                    echo '<a href="#" onClick="return confirmDeleteHutangBarang('.$url.','.$id.')" >';
+                                                    echo '<img src="'.$baseUrl.'assets/images/delete.png" alt="delete" height="30" width="30" >';
+                                                    echo '</a>';
+                                                }
+                                                echo "</td>"; 
+                                            echo "</tr>"; 
+                                            $count++;    
+                                        }                   
+                                    ?>  
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                        <?php           
+                            }
+                        ?>
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
         </div>
         <!-- /#page-wrapper -->
     </div>
@@ -351,6 +502,21 @@
 			});
 		}
 	};
+
+    function confirmDeleteHutangBarang(url, id) {
+		var password = prompt("Mohon masukkan password", "");
+
+		if (password != null) {
+			$.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
+				if(result == "true") {
+                    window.location.href = "<?= $baseUrl.'pegawai/remove_hutang_barang/' ?>"+url+"/"+id
+				}
+				else {
+					alert("Password tidak sesuai.");
+				}
+			});
+		}
+	};
 	
     function validateLunas(a, b)
     {
@@ -373,6 +539,7 @@
     $(document).ready(function() {
         $( "#tanggal" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#tanggal_hutang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+        $( "#tanggal_hutang_barang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $("#editForm").validate({
             rules: {                
                 telp: {
@@ -410,6 +577,25 @@
                 }
             }
         }); 
+        $("#hutangBarangForm").validate({
+            rules: {                
+                tanggal_hutang_barang: {
+                    date: true,
+                    required: true
+                },
+                txNamaBaru: {
+                    required: true
+                },
+                txJumlahBaru: {
+                    required: true,
+                    number: true
+                },
+                txJualBaru: {
+                    required: true,
+                    number: true
+                }
+            }
+        }); 
         $('#dataTables-example').DataTable({
             "scrollX": true,
             "lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]]
@@ -428,6 +614,39 @@
             if(res == false) {
                 event.preventDefault();
             }
+        });
+
+        $("#txNamaBaru").keyup(function () {
+            $.ajax({
+                type: "POST",
+                url: "<?= $baseUrl ?>barang/auto_complete",
+                data: {
+                    keyword: $("#txNamaBaru").val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        $('#dropdown_barang').empty();
+                        $('#txNamaBaru').attr("data-toggle", "dropdown");
+                        $('#dropdown_barang').dropdown('toggle');
+                    }
+                    else if (data.length == 0) {
+                        $('#txNamaBaru').attr("data-toggle", "");
+                    }
+                    $.each(data, function (key,value) {
+                        if (data.length >= 0) {
+                            text = value['Nama'] + ' - Rp ' + value['Modal'];
+                            $('#dropdown_barang').append('<li role="displayCountries" ><a data-nama="' + value['Nama'] + '" data-id="' + value['ID'] + '" data-modal="' + value['Modal'] + '" role="menuitem dropdown_barangli" class="dropdownlivalue">' + text + '</a></li>');
+                        }
+                    });
+                }
+            });
+        });
+
+        $('ul.txtnama').on('click', 'li a', function () {
+            $('#txNamaBaru').val($(this).data('nama'));
+            $('#txModalBaru').val($(this).data('modal'));
+            $('#txIDBaru').val($(this).data('id'));
         });
     });
     </script>
