@@ -328,10 +328,7 @@
 		if (password != null) {
 			$.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
 				if(result == "true") {
-					$.post("<?= $baseUrl.'pegawai/remove_absen/' ?>"+url+"/"+id, function(data){
-						alert("Sukses. Halaman ini akan di 'refresh'.");
-						location.reload();
-					});
+                    window.location.href = "<?= $baseUrl.'pegawai/remove_absen/' ?>"+url+"/"+id
 				}
 				else {
 					alert("Password tidak sesuai.");
@@ -346,10 +343,7 @@
 		if (password != null) {
 			$.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
 				if(result == "true") {
-					$.post("<?= $baseUrl.'pegawai/remove_hutang/' ?>"+url+"/"+id, function(data){
-						alert("Sukses. Halaman ini akan di 'refresh'.");
-						location.reload();
-					});
+                    window.location.href = "<?= $baseUrl.'pegawai/remove_hutang/' ?>"+url+"/"+id
 				}
 				else {
 					alert("Password tidak sesuai.");

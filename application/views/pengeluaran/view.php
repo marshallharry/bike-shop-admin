@@ -192,10 +192,7 @@
 		if (password != null) {
 			$.post("<?= $baseUrl.'user/validate_password/' ?>", {password: password}, function(result){
 				if(result == "true") {
-					$.post("<?= $baseUrl.'pengeluaran/remove/' ?>"+id, function(data){
-						alert("Sukses. Halaman ini akan di 'refresh'.");
-						location.reload();
-					});
+                    window.location.href = "<?= $baseUrl.'pengeluaran/remove/' ?>"+id
 				}
 				else {
 					alert("Password tidak sesuai.");
