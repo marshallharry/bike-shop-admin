@@ -119,6 +119,41 @@ class Pembelian_model extends CI_Model {
     public function remove_detail_pembelian($id) {
 		$this->db->delete('detail_pembelian', array('ID' => $id));
 	}
+
+	public function get_retur($headerid)
+	{
+		$sql = " SELECT dp.ID AS 'Detail_ID', dp.Nama_Barang AS 'Detail_Nama', dp.Modal_Barang AS 'Detail_Modal', dp.Jumlah AS 'Detail_Jumlah', ".
+				" rp.ID AS 'Retur_ID', rp.Nama AS 'Retur_Nama', rp.Modal AS 'Retur_Modal', rp.Jumlah AS 'Retur_Jumlah' ".
+				" FROM detail_pembelian dp  ".
+				" LEFT JOIN retur_pembelian rp ON dp.ID = rp.Detail_ID ".
+				" WHERE dp.Header_ID = ".$headerid;
+
+		$query = $this->db->query($sql);
+		return $query->result();
+	}
+
+	public function insert_retur($detail_id, $barang_id, $rnama, $rmodal, $rjumlah)
+	{
+		$param = array(
+			'Detail_ID' => $detail_id,
+			'Barang_ID' => $barang_id,
+			'Jumlah' => $rjumlah,
+			'Modal' => $rmodal,
+			'Nama' => $rnama
+			);
+		$this->db->insert('retur_pembelian', $param);
+	}
+
+	public function update_retur($rid, $barang_id, $rnama, $rmodal, $rjumlah) {
+    	$param = array(
+			'Barang_ID' => $barang_id,
+			'Jumlah' => $rjumlah,
+			'Modal' => $rmodal,
+			'Nama' => $rnama
+			);
+		$this->db->where('ID', $rid);
+		$this->db->update('retur_pembelian', $param); 
+    }
 }
 
 ?>

@@ -195,49 +195,36 @@ class Pembelian extends MY_Controller {
 		redirect('/pembelian/view', 'refresh');
 	}
 
-	public function retur() {	
-		$headerid = $_POST['txID'];
-		$grandTotal = $_POST['txTotal'];
+	public function retur($id) {	
+		$this->data['header_id'] = $id;
+		$this->data['details'] = $this->Pembelian_model->get_retur($id);
+		$this->load->view('pembelian/retur', $this->data);
+	}
 
-		if(!isset($_POST['idCart']) || empty($_POST['idCart']))
-		{
-			$_SESSION['error_msg'] = "Daftar Retur anda masih kosong.";
-			
-			redirect('/pembelian/view/'.$headerid, 'refresh');
+	public function submit_retur($header_id) {
+		$id = $_POST['txIDLama'];
+		$rid = $_POST['txIDBaru'];
+		$rnama = $_POST['txNamaBaru'];
+		$rmodal = $_POST['txModalBaru'];
+		$rjumlah = $_POST['txJumlahBaru'];
+
+		$temps = $this->Barang_model->check_exist($rnama, $rmodal);
+		if(!empty($temps)) {
+			$temp = $temps[0];
+			$idbaru = $temp->ID;
 		}
-		else
-		{
-			if(isset($_POST['idCart']) && !empty($_POST['idCart'])) {
-				$id = $_POST['idCart'];
-				$amount = $_POST['amountCart'];
-
-				for ($idx = 0; $idx < count($id); $idx++) {
-					$detail = $this->Pembelian_model->get_detail_pembelian($headerid, $id[$idx]);
-					$returAmt = $amount[$idx];
-
-					if ($detail != null)
-					{
-						$idBarang = $detail->Barang_ID;
-						$modal = $detail->Modal_Barang;
-						$newAmt = $detail->Jumlah - $returAmt;
-						$this->Pembelian_model->update_detail_pembelian($id[$idx], $newAmt);
-			    		$this->Barang_model->remove_stock_barang($idBarang, $returAmt);
-
-			    		$total = $returAmt * $modal;
-			    		$grandTotal = $grandTotal - $total;
-					}
-				} 
-			}
-
-			$this->Pembelian_model->update_header_pembelian_total($headerid, $grandTotal);
-
-			if($grandTotal === 0) {
-				$this->Pembelian_model->remove_pembelian($headerid);
-				redirect('/pembelian/view', 'refresh');
-			}
-
-			redirect('/pembelian/view/'.$headerid, 'refresh');		
+		else {
+			$idbaru = $this->Barang_model->add_barang($rnama, $rmodal, $rjumlah);
 		}
+
+		if($rid == 0) {
+			$this->Pembelian_model->insert_retur($id, $idbaru, $rnama, $rmodal, $rjumlah);
+		}
+		else {
+			$this->Pembelian_model->update_retur($rid, $idbaru, $rnama, $rmodal, $rjumlah);
+		}
+
+		redirect('/pembelian/retur/'.$header_id, 'refresh');
 	}
 
 	public function remove_detail($headerid, $id) {
