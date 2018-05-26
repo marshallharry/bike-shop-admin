@@ -23,4 +23,31 @@ class Home extends CI_Controller {
 			$this->load->view('index');	
 		}
 	}
+
+	public function back_up()
+	{
+		if( !isset($_SESSION['userID']) ) {
+			$this->load->view('login');
+		}
+		else {
+			$this->load->dbutil();
+
+			$prefs = array(     
+					'format'      => 'zip',             
+					'filename'    => 'laju_utama.sql'
+				);
+
+			$backup =& $this->dbutil->backup($prefs); 
+
+			$db_name = 'Backed Up on '. date("Y-m-d H.i.s") .'.zip';
+			$save = '/'.$db_name;
+
+			$this->load->helper('file');
+			write_file($save, $backup); 
+
+			$this->load->helper('download');
+			force_download($db_name, $backup);	
+		}
+		redirect('/', 'refresh');		
+	}
 }

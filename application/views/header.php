@@ -133,6 +133,9 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                        <li>
+                            <a href="<?= $baseUrl ?>home/back_up"><i class="glyphicon glyphicon-export"></i> Back Up</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
