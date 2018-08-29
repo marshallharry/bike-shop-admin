@@ -327,21 +327,28 @@
                 }
             }); 
 
+            $(window).click(function() {
+                $('#dropdown_barang').hide();
+            });
+
             $("#txNamaBaru").keyup(function () {
+                const keyword = $("#txNamaBaru").val();
+                if (keyword !== "") {
                 $.ajax({
                     type: "POST",
                     url: "<?= $baseUrl ?>barang/auto_complete",
                     data: {
-                        keyword: $("#txNamaBaru").val()
+                            keyword: keyword
                     },
                     dataType: "json",
                     success: function (data) {
-                        if (data.length > 0) {
                             $('#dropdown_barang').empty();
+                        if (data.length > 0) {
+                                $('#dropdown_barang').show();
                             $('#txNamaBaru').attr("data-toggle", "dropdown");
-                            $('#dropdown_barang').dropdown('toggle');
                         }
                         else if (data.length == 0) {
+                                $('#dropdown_barang').hide();
                             $('#txNamaBaru').attr("data-toggle", "");
                         }
                         $.each(data, function (key,value) {
@@ -352,6 +359,9 @@
                         });
                     }
                 });
+                } else {
+                    $('#dropdown_barang').hide();
+                }
             });
 
             $('ul.txtnama').on('click', 'li a', function () {

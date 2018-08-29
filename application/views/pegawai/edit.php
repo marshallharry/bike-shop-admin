@@ -175,7 +175,7 @@
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label>Harga Modal</label>
-                                            <input class="form-control" type="text" id="txModalBaru" name="txModalBaru" readonly />
+                                            <input class="form-control" type="text" id="txModalBaru" name="txModalBaru" />
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
@@ -615,32 +615,42 @@
                 event.preventDefault();
             }
         });
+    
+        $(window).click(function() {
+            $('#dropdown_barang').hide();
+        });
 
         $("#txNamaBaru").keyup(function () {
-            $.ajax({
-                type: "POST",
-                url: "<?= $baseUrl ?>barang/auto_complete",
-                data: {
-                    keyword: $("#txNamaBaru").val()
-                },
-                dataType: "json",
-                success: function (data) {
-                    if (data.length > 0) {
+            const keyword = $("#txNamaBaru").val();
+            if (keyword !== "") {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= $baseUrl ?>barang/auto_complete",
+                    data: {
+                        keyword: keyword
+                    },
+                    dataType: "json",
+                    success: function (data) {
                         $('#dropdown_barang').empty();
-                        $('#txNamaBaru').attr("data-toggle", "dropdown");
-                        $('#dropdown_barang').dropdown('toggle');
-                    }
-                    else if (data.length == 0) {
-                        $('#txNamaBaru').attr("data-toggle", "");
-                    }
-                    $.each(data, function (key,value) {
-                        if (data.length >= 0) {
-                            text = value['Nama'] + ' - Rp ' + value['Modal'];
-                            $('#dropdown_barang').append('<li role="displayCountries" ><a data-nama="' + value['Nama'] + '" data-id="' + value['ID'] + '" data-modal="' + value['Modal'] + '" role="menuitem dropdown_barangli" class="dropdownlivalue">' + text + '</a></li>');
+                        if (data.length > 0) {
+                            $('#dropdown_barang').show();
+                            $('#txNamaBaru').attr("data-toggle", "dropdown");
                         }
-                    });
-                }
-            });
+                        else if (data.length == 0) {
+                            $('#dropdown_barang').hide();
+                            $('#txNamaBaru').attr("data-toggle", "");
+                        }
+                        $.each(data, function (key,value) {
+                            if (data.length >= 0) {
+                                text = value['Nama'] + ' - Rp ' + value['Modal'];
+                                $('#dropdown_barang').append('<li role="displayCountries" ><a data-nama="' + value['Nama'] + '" data-id="' + value['ID'] + '" data-modal="' + value['Modal'] + '" role="menuitem dropdown_barangli" class="dropdownlivalue">' + text + '</a></li>');
+                            }
+                        });
+                    }
+                });
+            } else {
+                $('#dropdown_barang').hide();
+            }
         });
 
         $('ul.txtnama').on('click', 'li a', function () {
