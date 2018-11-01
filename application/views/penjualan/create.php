@@ -166,6 +166,15 @@
     <script src="<?php echo base_url(); ?>assets/js/jquery-validation-custom.js"></script>
     <script>
         var serviceId = 1;
+        let cartItems = {};
+
+        function checkCartExist(nama, modal) {
+            const obj = cartItems[`${nama}-${modal}`];
+            return obj === undefined ? {
+                id: 0,
+                amount: 0
+            } : obj;
+        }
 
         function addtocartBaru() { 
             id = serviceId;        
@@ -218,87 +227,103 @@
                         amount = parseInt(amountStr);
                     }
 
-                    harga = parseFloat(hargaStr);
-                    total = amount * harga;
+                    const obj = checkCartExist(nama, modal);
+                    amount += obj.amount;
 
-                    var parentel = document.getElementById('itemlist'); 
-                    newrow = document.createElement('tr'); 
-                    newrow.id = "trCartBaru"+id;
+                    if (amount > stock) {
+                        alert("Stok tidak mencukupi.");
+                    } else {
+                        harga = parseFloat(hargaStr);
+                        total = amount * harga;
+                        id = obj.id > 0 ? obj.id : id;
 
-                    var amountCart = document.createElement("input");
-                    amountCart.setAttribute("type", "hidden");
-                    amountCart.setAttribute("name", "amountCart[]");
-                    amountCart.setAttribute("value", amount);  
+                        var parentel = document.getElementById('itemlist'); 
+                        newrow = document.createElement('tr'); 
+                        newrow.id = "trCartBaru"+id;
 
-                    var modalCart = document.createElement("input");
-                    modalCart.setAttribute("type", "hidden");
-                    modalCart.setAttribute("name", "modalCart[]");
-                    modalCart.setAttribute("value", modal); 
+                        var amountCart = document.createElement("input");
+                        amountCart.setAttribute("type", "hidden");
+                        amountCart.setAttribute("name", "amountCart[]");
+                        amountCart.setAttribute("value", amount);  
 
-                    var hargaCart = document.createElement("input");
-                    hargaCart.setAttribute("type", "hidden");
-                    hargaCart.setAttribute("name", "hargaCart[]");
-                    hargaCart.setAttribute("value", harga);
+                        var modalCart = document.createElement("input");
+                        modalCart.setAttribute("type", "hidden");
+                        modalCart.setAttribute("name", "modalCart[]");
+                        modalCart.setAttribute("value", modal); 
 
-                    var nameCart = document.createElement("input");
-                    nameCart.setAttribute("type", "hidden");
-                    nameCart.setAttribute("name", "nameCart[]");
-                    nameCart.setAttribute("value", nama);
+                        var hargaCart = document.createElement("input");
+                        hargaCart.setAttribute("type", "hidden");
+                        hargaCart.setAttribute("name", "hargaCart[]");
+                        hargaCart.setAttribute("value", harga);
 
-                    var stokCart = document.createElement("input");
-                    stokCart.setAttribute("type", "hidden");
-                    stokCart.setAttribute("name", "stockCart[]");
-                    stokCart.setAttribute("value", stock);
+                        var nameCart = document.createElement("input");
+                        nameCart.setAttribute("type", "hidden");
+                        nameCart.setAttribute("name", "nameCart[]");
+                        nameCart.setAttribute("value", nama);
 
-                    newname = document.createElement('td'); 
-                    newname.innerHTML = nama; 
-                    newname.appendChild(nameCart);
+                        var stokCart = document.createElement("input");
+                        stokCart.setAttribute("type", "hidden");
+                        stokCart.setAttribute("name", "stockCart[]");
+                        stokCart.setAttribute("value", stock);
 
-                    newmodal = document.createElement('td'); 
-                    newmodal.innerHTML = modal;
-                    newmodal.appendChild(modalCart); 
+                        newname = document.createElement('td'); 
+                        newname.innerHTML = nama; 
+                        newname.appendChild(nameCart);
 
-                    newamount = document.createElement('td'); 
-                    newamount.innerHTML = amount;
-                    newamount.appendChild(amountCart); 
+                        newmodal = document.createElement('td'); 
+                        newmodal.innerHTML = modal;
+                        newmodal.appendChild(modalCart); 
 
-                    newHarga = document.createElement('td'); 
-                    newHarga.innerHTML = harga; 
-                    newHarga.appendChild(hargaCart); 
+                        newamount = document.createElement('td');
+                        newamount.innerHTML = amount;
+                        newamount.appendChild(amountCart); 
 
-                    newTotal = document.createElement('td'); 
-                    newTotal.innerHTML = total; 
+                        newHarga = document.createElement('td');
+                        newHarga.innerHTML = harga; 
+                        newHarga.appendChild(hargaCart); 
 
-                    newStok = document.createElement('td'); 
-                    newStok.innerHTML = stock;
-                    newStok.appendChild(stokCart);
+                        newTotal = document.createElement('td'); 
+                        newTotal.innerHTML = total; 
 
-                    newbutton = document.createElement('td');
-                    center = document.createElement('center');
-                    var btn = document.createElement("BUTTON");        
-                    var t = document.createTextNode("X");       
-                    btn.appendChild(t);  
-                    $(btn).attr('onclick', 'removeCartBaru('+ id +')');
-                    btn.id = 'remove'+id;                              
-                    center.appendChild(btn);
-                    newbutton.appendChild(center);
+                        newStok = document.createElement('td'); 
+                        newStok.innerHTML = stock;
+                        newStok.appendChild(stokCart);
 
-                    newrow.appendChild(newname); 
-                    newrow.appendChild(newStok);
-                    newrow.appendChild(newmodal); 
-                    newrow.appendChild(newamount); 
-                    newrow.appendChild(newHarga); 
-                    newrow.appendChild(newTotal); 
-                    newrow.appendChild(newbutton); 
-                    parentel.appendChild(newrow); 
+                        newbutton = document.createElement('td');
+                        center = document.createElement('center');
+                        var btn = document.createElement("BUTTON");        
+                        var t = document.createTextNode("X");       
+                        btn.appendChild(t);  
+                        $(btn).attr('onclick', 'removeCartBaru('+ id +')');
+                        btn.id = 'remove'+id;                              
+                        center.appendChild(btn);
+                        newbutton.appendChild(center);
 
-                    $('#txNamaBaru').val('');
-                    $('#txModalBaru').val('');
-                    $('#txJumlahBaru').val('');
-                    $('#txJualBaru').val('');
-                    $('#txStokBaru').val('');
+                        newrow.appendChild(newname); 
+                        newrow.appendChild(newStok);
+                        newrow.appendChild(newmodal); 
+                        newrow.appendChild(newamount); 
+                        newrow.appendChild(newHarga); 
+                        newrow.appendChild(newTotal); 
+                        newrow.appendChild(newbutton); 
+                         
+                        $('#txNamaBaru').val('');
+                        $('#txModalBaru').val('');
+                        $('#txJumlahBaru').val('');
+                        $('#txJualBaru').val('');
+                        $('#txStokBaru').val('');
 
-                    serviceId++; 
+                        if (obj.id === 0) {
+                            serviceId++;
+                            cartItems[`${nama}-${modal}`] = {
+                                id: id,
+                                amount: amount
+                            };
+                        } else {
+                            $('#trCartBaru'+id).remove();
+                        }
+                        parentel.appendChild(newrow);
+                    }
                 }
             } 
         };
@@ -325,7 +350,7 @@
                         date: true
                     }
                 }
-            }); 
+            });
 
             $(window).click(function() {
                 $('#dropdown_barang').hide();
@@ -334,31 +359,31 @@
             $("#txNamaBaru").keyup(function () {
                 const keyword = $("#txNamaBaru").val();
                 if (keyword !== "") {
-                $.ajax({
-                    type: "POST",
-                    url: "<?= $baseUrl ?>barang/auto_complete",
-                    data: {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= $baseUrl ?>barang/auto_complete",
+                        data: {
                             keyword: keyword
-                    },
-                    dataType: "json",
-                    success: function (data) {
+                        },
+                        dataType: "json",
+                        success: function (data) {
                             $('#dropdown_barang').empty();
-                        if (data.length > 0) {
+                            if (data.length > 0) {
                                 $('#dropdown_barang').show();
-                            $('#txNamaBaru').attr("data-toggle", "dropdown");
-                        }
-                        else if (data.length == 0) {
-                                $('#dropdown_barang').hide();
-                            $('#txNamaBaru').attr("data-toggle", "");
-                        }
-                        $.each(data, function (key,value) {
-                            if (data.length >= 0) {
-                                text = value['Nama'] + ' - Rp ' + value['Modal'];
-                                $('#dropdown_barang').append('<li role="displayCountries" ><a data-nama="' + value['Nama'] + '" data-stok="' + value['Jumlah'] + '" data-modal="' + value['Modal'] + '" role="menuitem dropdown_barangli" class="dropdownlivalue">' + text + '</a></li>');
+                                $('#txNamaBaru').attr("data-toggle", "dropdown");
                             }
-                        });
-                    }
-                });
+                            else if (data.length == 0) {
+                                $('#dropdown_barang').hide();
+                                $('#txNamaBaru').attr("data-toggle", "");
+                            }
+                            $.each(data, function (key,value) {
+                                if (data.length >= 0) {
+                                    text = value['Nama'] + ' - Rp ' + value['Modal'];
+                                    $('#dropdown_barang').append('<li role="displayCountries" ><a data-nama="' + value['Nama'] + '" data-stok="' + value['Jumlah'] + '" data-modal="' + value['Modal'] + '" role="menuitem dropdown_barangli" class="dropdownlivalue">' + text + '</a></li>');
+                                }
+                            });
+                        }
+                    });
                 } else {
                     $('#dropdown_barang').hide();
                 }
