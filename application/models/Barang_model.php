@@ -76,6 +76,14 @@ class Barang_model extends CI_Model {
 		$this->db->where("Modal", $modal);
         return $this->db->get('barang')->result();
 	}
+
+	public function get_empty_stock()
+	{
+		$query = $this->db->get_where('barang', array('Jumlah' => 0));
+		$result = $query->result();
+		
+		return $result;
+	}
 }
 
 ?>

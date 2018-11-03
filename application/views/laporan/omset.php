@@ -158,7 +158,7 @@
                                             echo '</b></td>';
                                         echo '</tr>';  
                                         echo '<tr>';   
-                                            echo '<td colspan="3" style="text-align:right">';
+                                            echo '<td colspan="2" style="text-align:right">';
                                             echo '<b>Sisa Omset :</b>';
                                             echo '</td>';
                                             echo '<td><b>';
@@ -166,6 +166,9 @@
                                             echo '</b></td>';
                                             echo '<td><b>';
                                             echo number_format($totalSetor);
+                                            echo '</b></td>';
+                                            echo '<td><b>';
+                                            echo number_format($totalSetor - $totalBayar);
                                             echo '</b></td>';
                                         echo '</tr>';            
                                     ?>  

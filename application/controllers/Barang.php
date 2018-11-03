@@ -53,4 +53,9 @@ class Barang extends MY_Controller {
         $data=$this->Barang_model->search_barang($keyword);        
         echo json_encode($data);
 	}
+
+	public function empty() {
+		$this->data['result'] = $this->Barang_model->get_empty_stock();
+		$this->load->view('barang/empty',$this->data);
+	}
 }

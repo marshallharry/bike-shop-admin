@@ -306,7 +306,8 @@
                                 </thead>
                                 <tbody>
                                     <?php           
-                                        $count = 1;               
+                                        $count = 1;
+                                        $total = 0;              
                                         foreach($hutang as $hut){
                                             if($count%2 == 0) {
                                                 $class = "even";
@@ -329,6 +330,8 @@
                                                     echo 'Belum Lunas (Klik untuk melunasi semua)';
                                                     echo '</a>';
                                                     $disabled = "";
+
+                                                    $total += $hut->Sisa;
                                                 }
                                                 echo "</td>";
                                                 echo '<td>';
@@ -353,7 +356,15 @@
                                                 echo "</td>"; 
                                             echo "</tr>"; 
                                             $count++;    
-                                        }                   
+                                        }
+                                        echo "<tr>";
+                                            echo '<td colspan="6">';
+                                            echo "<b>Total Sisa Hutang</b>";
+                                            echo "</td>";
+                                            echo "<td>";
+                                            echo number_format($total);
+                                            echo "</td>";
+                                        echo "</tr>";                   
                                     ?>  
                                 </tbody>
                             </table>

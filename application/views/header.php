@@ -68,7 +68,15 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="<?= $baseUrl ?>barang"><i class="fa fa-database fa-fw"></i> Barang</a>
+                            <a href="#"><i class="fa fa-database fa-fw"></i> Barang<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?= $baseUrl ?>barang">Daftar Barang</a>
+                                </li>
+                                <li>
+                                    <a href="<?= $baseUrl ?>barang/empty">Barang Kosong</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href="<?= $baseUrl ?>pegawai"><i class="fa fa-users fa-fw"></i> Pegawai</a>
