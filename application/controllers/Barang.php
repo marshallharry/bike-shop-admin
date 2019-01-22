@@ -54,7 +54,7 @@ class Barang extends MY_Controller {
         echo json_encode($data);
 	}
 
-	public function empty() {
+	public function kosong() {
 		$this->data['result'] = $this->Barang_model->get_empty_stock();
 		$this->load->view('barang/empty',$this->data);
 	}

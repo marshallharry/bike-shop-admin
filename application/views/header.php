@@ -74,7 +74,7 @@
                                     <a href="<?= $baseUrl ?>barang">Daftar Barang</a>
                                 </li>
                                 <li>
-                                    <a href="<?= $baseUrl ?>barang/empty">Barang Kosong</a>
+                                    <a href="<?= $baseUrl ?>barang/kosong">Barang Kosong</a>
                                 </li>
                             </ul>
                         </li>
