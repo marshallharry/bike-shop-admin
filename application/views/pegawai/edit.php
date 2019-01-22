@@ -5,7 +5,7 @@
     $res = $result[0];
     $totalMasuk = $totalMasuk == null ? 0 : $totalMasuk;
     $totalHutang = $totalHutang == null ? 0 : $totalHutang;
-    $totalGaji = ($totalMasuk * $res->Gaji) - $totalHutang;
+    $totalGaji = ($totalMasuk * $res->Gaji) - $totalHutangLunas;
 ?>
         <div id="page-wrapper">
             <div class="row">

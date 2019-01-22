@@ -60,8 +60,10 @@ class Pegawai extends MY_Controller {
 		$this->data['totalMasuk'] = $total[0]->Total;
 
 		$hutang = $this->Pegawai_model->get_total_hutang($id);
+		$hutang_lunas = $this->Pegawai_model->get_hutang_lunas_per_month($id);
 		$hutang_barang = $this->Pegawai_model->get_total_hutang_barang($id);
 		$this->data['totalHutang'] = $hutang[0]->Total + $hutang_barang[0]->Total;
+		$this->data['totalHutangLunas'] = $hutang_lunas[0]->Total;
 		$this->load->view('pegawai/edit',$this->data);
 	}
 
@@ -104,7 +106,11 @@ class Pegawai extends MY_Controller {
 	}
 
 	public function lunas_hutang($pid, $id) {
+		$hutangs = $this->Pegawai_model->get_hutang_by_id($id);
+		$hutang = $hutangs[0];
+
 		$this->Pegawai_model->lunas_hutang($id);	
+		$this->Pegawai_model->transact_lunas_hutang($id, $hutang->Sisa);
 		
 		redirect('/pegawai/edit/'.$pid, 'refresh');
 	}
@@ -123,6 +129,7 @@ class Pegawai extends MY_Controller {
 		}
 		else {
 			$this->Pegawai_model->lunas_hutang_sebagian($id, $newjml);
+			$this->Pegawai_model->transact_lunas_hutang($id, $lunas);
 		}
 
 		redirect('/pegawai/edit/'.$pid, 'refresh');

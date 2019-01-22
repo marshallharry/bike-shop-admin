@@ -306,6 +306,23 @@ INSERT INTO `user` (`ID`, `Username`, `Password`) VALUES
 --
 
 --
+-- Table structure for table `transaksi_lunas_hutang`
+--
+
+CREATE TABLE `transaksi_lunas_hutang` (
+  `ID` int(11) NOT NULL,
+  `Hutang_ID` int(11) NOT NULL,
+  `Jumlah` decimal(10,0) NOT NULL,
+  `Tanggal` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for table `transaksi_lunas_hutang`
+--
+ALTER TABLE `transaksi_lunas_hutang`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `absensi`
 --
 ALTER TABLE `absensi`

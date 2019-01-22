@@ -93,7 +93,7 @@ class Pegawai_model extends CI_Model {
 			'Tanggal' => $tanggal,
 			'Jumlah' => $jumlah,
 			'Status' => 'belum',
-			'Sisa' => 0,
+			'Sisa' => $jumlah,
 			'Keterangan' => $keterangan
 			);
 		$this->db->insert('hutang', $param);
@@ -147,8 +147,19 @@ class Pegawai_model extends CI_Model {
 
 	public function get_total_hutang($id)
 	{
-		$sql = " SELECT SUM(h.Jumlah) AS Total FROM `hutang` h WHERE h.Pegawai_ID = ".$id." AND h.Status = 'belum' ";
+		$sql = " SELECT SUM(h.Sisa) AS Total FROM `hutang` h WHERE h.Pegawai_ID = ".$id." AND h.Status = 'belum' ";
 		$query = $this->db->query($sql);
+		return $query->result();
+	}
+
+	public function get_hutang_lunas_per_month($id)
+	{
+		$sql = "SELECT SUM(t.Jumlah) AS Total FROM transaksi_lunas_hutang t ".
+		" JOIN hutang h ON h.ID = t.Hutang_ID ".
+		" WHERE h.Pegawai_ID = ".$id.
+		" AND MONTH(t.Tanggal) = MONTH(NOW()) ".
+		" AND YEAR(t.Tanggal) = YEAR(NOW()) ";
+		$query = $this->db->query($sql) ;
 		return $query->result();
 	}
 
@@ -169,6 +180,16 @@ class Pegawai_model extends CI_Model {
 			'Harga' => $harga
 			);
 		$this->db->insert('hutang_barang', $param);
+	}
+
+	public function transact_lunas_hutang($hutangId, $jumlah)
+	{
+		$param = array(
+			'Hutang_ID' => $hutangId,
+			'Tanggal' => date('Y-m-d'),
+			'Jumlah' => $jumlah
+			);
+		$this->db->insert('transaksi_lunas_hutang', $param);
 	}
 
 	public function get_hutang_barang($id)
