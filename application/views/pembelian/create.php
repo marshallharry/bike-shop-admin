@@ -51,10 +51,19 @@
                                             <ul class="dropdown-menu txtnama" style="margin-left:15px;margin-right:0px;" role="menu" aria-labelledby="dropdownMenu"  id="dropdown_barang"></ul>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label>Harga Modal</label>
                                             <input class="form-control" type="text" id="txModalBaru" name="txModalBaru" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label>Diskon</label>
+                                            <input class="form-control" type="text" id="txDiskonBaru" name="txDiskonBaru" />
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
@@ -98,6 +107,7 @@
                                             <tr>                    
                                                 <th >Nama</th>
 		                                        <th >Harga Modal</th>
+                                                <th >Diskon</th>
 		                                        <th >Jumlah</th>
                                                 <th>
                                                     <center>
@@ -180,80 +190,103 @@
             id = serviceId;        
 
             nama = $('#txNamaBaru').val();  
-            modalStr = $('#txModalBaru').val(); 
+            modalStr = $('#txModalBaru').val();
+            diskonStr = $('#txDiskonBaru').val(); 
             amountStr = $('#txJumlahBaru').val();   
             
-            if (nama == "" || amountStr == "" || modalStr == "") 
+            if (nama === "" || amountStr === "" || modalStr === "") 
             {
                 alert("Nama, Jumlah, dan Harga Modal harus diisi.");
             }
-            else if(isNaN(amountStr) || isNaN(modalStr))
+            else if((isNaN(amountStr) || isNaN(modalStr)) || (diskonStr !== "" && isNaN(diskonStr)))
             {
-                alert("Jumlah dan Harga Modal harus berupa angka.");
+                alert("Jumlah, Diskon dan Harga Modal harus berupa angka.");
             }
             else
             {
                 modal = parseInt(modalStr);
                 amount = parseInt(amountStr);
+                diskon = parseInt(diskonStr);
 
-                var parentel = document.getElementById('itemlist'); 
-                newrow = document.createElement('tr'); 
-                newrow.id = "trCartBaru"+id;
+                if(diskon >= modal)
+                {
+                    alert("Diskon tidak boleh sama dengan atau melebihi Harga Modal.");
+                }
+                else
+                {
+                    var parentel = document.getElementById('itemlist'); 
+                    newrow = document.createElement('tr'); 
+                    newrow.id = "trCartBaru"+id;
 
-                var amountCart = document.createElement("input");
-                amountCart.setAttribute("type", "hidden");
-                amountCart.setAttribute("name", "amountCart[]");
-                amountCart.setAttribute("value", amount);  
+                    var amountCart = document.createElement("input");
+                    amountCart.setAttribute("type", "hidden");
+                    amountCart.setAttribute("name", "amountCart[]");
+                    amountCart.setAttribute("value", amount);  
 
-                var modalCart = document.createElement("input");
-                modalCart.setAttribute("type", "hidden");
-                modalCart.setAttribute("name", "modalCart[]");
-                modalCart.setAttribute("value", modal); 
+                    var modalCart = document.createElement("input");
+                    modalCart.setAttribute("type", "hidden");
+                    modalCart.setAttribute("name", "modalCart[]");
+                    modalCart.setAttribute("value", modal);
 
-                var nameCart = document.createElement("input");
-                nameCart.setAttribute("type", "hidden");
-                nameCart.setAttribute("name", "nameCart[]");
-                nameCart.setAttribute("value", nama);
+                    var diskonCart = document.createElement("input");
+                    diskonCart.setAttribute("type", "hidden");
+                    diskonCart.setAttribute("name", "diskonCart[]");
+                    diskonCart.setAttribute("value", diskon); 
 
-                newname = document.createElement('td'); 
-                newname.innerHTML = nama; 
-                newname.appendChild(nameCart);
+                    var nameCart = document.createElement("input");
+                    nameCart.setAttribute("type", "hidden");
+                    nameCart.setAttribute("name", "nameCart[]");
+                    nameCart.setAttribute("value", nama);
 
-                var pModal = document.createElement("p");
-                pModal.innerHTML = modal;
+                    newname = document.createElement('td'); 
+                    newname.innerHTML = nama; 
+                    newname.appendChild(nameCart);
 
-                newmodal = document.createElement('td'); 
-                newmodal.appendChild(pModal); 
-                newmodal.appendChild(modalCart); 
+                    var pModal = document.createElement("p");
+                    pModal.innerHTML = modal;
 
-                var pAmount = document.createElement("p");
-                pAmount.innerHTML = amount; 
+                    newmodal = document.createElement('td'); 
+                    newmodal.appendChild(pModal); 
+                    newmodal.appendChild(modalCart);
 
-                newamount = document.createElement('td'); 
-                newamount.appendChild(pAmount); 
-                newamount.appendChild(amountCart); 
+                    var pDiskon = document.createElement("p");
+                    pDiskon.innerHTML = diskon;
 
-                newbutton = document.createElement('td');
-                center = document.createElement('center');
-                var btn = document.createElement("BUTTON");        
-                var t = document.createTextNode("X");       
-                btn.appendChild(t);  
-                $(btn).attr('onclick', 'removeCartBaru('+ id +')');
-                btn.id = 'remove'+id;                              
-                center.appendChild(btn);
-                newbutton.appendChild(center);
+                    newDiskon = document.createElement('td'); 
+                    newDiskon.appendChild(pDiskon); 
+                    newDiskon.appendChild(diskonCart); 
 
-                newrow.appendChild(newname); 
-                newrow.appendChild(newmodal); 
-                newrow.appendChild(newamount); 
-                newrow.appendChild(newbutton); 
-                parentel.appendChild(newrow); 
+                    var pAmount = document.createElement("p");
+                    pAmount.innerHTML = amount; 
 
-                $('#txNamaBaru').val('');
-                $('#txModalBaru').val('');
-                $('#txJumlahBaru').val('');
+                    newamount = document.createElement('td'); 
+                    newamount.appendChild(pAmount); 
+                    newamount.appendChild(amountCart); 
 
-                serviceId++; 
+                    newbutton = document.createElement('td');
+                    center = document.createElement('center');
+                    var btn = document.createElement("BUTTON");        
+                    var t = document.createTextNode("X");       
+                    btn.appendChild(t);  
+                    $(btn).attr('onclick', 'removeCartBaru('+ id +')');
+                    btn.id = 'remove'+id;                              
+                    center.appendChild(btn);
+                    newbutton.appendChild(center);
+
+                    newrow.appendChild(newname); 
+                    newrow.appendChild(newmodal);
+                    newrow.appendChild(newDiskon); 
+                    newrow.appendChild(newamount); 
+                    newrow.appendChild(newbutton); 
+                    parentel.appendChild(newrow); 
+
+                    $('#txNamaBaru').val('');
+                    $('#txModalBaru').val('');
+                    $('#txJumlahBaru').val('');
+                    $('#txDiskonBaru').val('');
+
+                    serviceId++; 
+                }
             } 
         }; 
 

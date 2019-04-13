@@ -71,8 +71,7 @@ class Transaksi_model extends CI_Model {
 	}
 
 	public function get_last_saldo_tunai() {
-		$this->db->order_by('Tanggal', 'desc');
-		$this->db->order_by('Status', 'desc');
+		$this->db->order_by('ID', 'desc');
 		$this->db->limit(1);
      	$result = $this->db->get('transaksi_tunai')->result();
      	if(empty($result)) {

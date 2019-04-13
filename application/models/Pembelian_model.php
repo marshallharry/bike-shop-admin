@@ -39,7 +39,7 @@ class Pembelian_model extends CI_Model {
 	{
 		if($id != null) 
 		{
-			$this->db->select('detail_pembelian.ID, detail_pembelian.Nama_Barang, detail_pembelian.Modal_Barang, detail_pembelian.Jumlah, detail_pembelian.Barang_ID');
+			$this->db->select('detail_pembelian.ID, detail_pembelian.Nama_Barang, detail_pembelian.Modal_Barang, detail_pembelian.Jumlah, detail_pembelian.Barang_ID, detail_pembelian.Diskon');
 			$this->db->from('detail_pembelian');
 			$this->db->where('detail_pembelian.ID', $id);
 			$query = $this->db->get();
@@ -50,7 +50,7 @@ class Pembelian_model extends CI_Model {
 			return $result[0];
 		}
 
-		$this->db->select('detail_pembelian.ID, detail_pembelian.Nama_Barang, detail_pembelian.Modal_Barang, detail_pembelian.Jumlah, detail_pembelian.Barang_ID');
+		$this->db->select('detail_pembelian.ID, detail_pembelian.Nama_Barang, detail_pembelian.Modal_Barang, detail_pembelian.Jumlah, detail_pembelian.Barang_ID, detail_pembelian.Diskon');
 		$this->db->from('detail_pembelian');
 		$this->db->where('detail_pembelian.Header_ID', $headerid);
 		$query = $this->db->get();
@@ -74,13 +74,14 @@ class Pembelian_model extends CI_Model {
    		return  $insert_id;
     }
 
-    public function add_detail_pembelian($id_barang, $jumlah, $headerid, $modal, $nama) {
+    public function add_detail_pembelian($id_barang, $jumlah, $headerid, $modal, $nama, $diskon) {
     	$param = array(
 			'Header_ID' => $headerid,
 			'Barang_ID' => $id_barang,
 			'Jumlah' => $jumlah,
 			'Modal_Barang' => $modal,
-			'Nama_Barang' => $nama
+			'Nama_Barang' => $nama,
+			'Diskon' => $diskon
 			);
 		$this->db->insert('detail_pembelian', $param);
     }
