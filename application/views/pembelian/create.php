@@ -206,7 +206,7 @@
             {
                 modal = parseInt(modalStr);
                 amount = parseInt(amountStr);
-                diskon = parseInt(diskonStr);
+                diskon = diskonStr === "" ? 0 : parseInt(diskonStr);
 
                 if(diskon >= modal)
                 {
