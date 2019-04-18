@@ -62,14 +62,20 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
+                                            <label>Jumlah</label>
+                                            <input class="form-control" type="text" id="txJumlahBaru" name="txJumlahBaru" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
                                             <label>Diskon</label>
                                             <input class="form-control" type="text" id="txDiskonBaru" name="txDiskonBaru" />
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
-                                            <label>Jumlah</label>
-                                            <input class="form-control" type="text" id="txJumlahBaru" name="txJumlahBaru" />
+                                            <label>PPN</label>
+                                            <input class="form-control" type="text" id="txPPNBaru" name="txPPNBaru" />
                                         </div>
                                     </div>
                                 </div>
@@ -108,6 +114,7 @@
                                                 <th >Nama</th>
 		                                        <th >Harga Modal</th>
                                                 <th >Diskon</th>
+                                                <th >PPN</th>
 		                                        <th >Jumlah</th>
                                                 <th>
                                                     <center>
@@ -192,21 +199,23 @@
             nama = $('#txNamaBaru').val();  
             modalStr = $('#txModalBaru').val();
             diskonStr = $('#txDiskonBaru').val(); 
-            amountStr = $('#txJumlahBaru').val();   
+            amountStr = $('#txJumlahBaru').val();
+            ppnStr = $('#txPPNBaru').val();   
             
             if (nama === "" || amountStr === "" || modalStr === "") 
             {
                 alert("Nama, Jumlah, dan Harga Modal harus diisi.");
             }
-            else if((isNaN(amountStr) || isNaN(modalStr)) || (diskonStr !== "" && isNaN(diskonStr)))
+            else if((isNaN(amountStr) || isNaN(modalStr)) || (diskonStr !== "" && isNaN(diskonStr)) || (ppnStr !== "" && isNaN(ppnStr)))
             {
-                alert("Jumlah, Diskon dan Harga Modal harus berupa angka.");
+                alert("Jumlah, Diskon, PPN dan Harga Modal harus berupa angka.");
             }
             else
             {
                 modal = parseInt(modalStr);
                 amount = parseInt(amountStr);
                 diskon = diskonStr === "" ? 0 : parseInt(diskonStr);
+                ppn = ppnStr === "" ? 0 : parseInt(ppnStr);
 
                 if(diskon >= modal)
                 {
@@ -231,7 +240,12 @@
                     var diskonCart = document.createElement("input");
                     diskonCart.setAttribute("type", "hidden");
                     diskonCart.setAttribute("name", "diskonCart[]");
-                    diskonCart.setAttribute("value", diskon); 
+                    diskonCart.setAttribute("value", diskon);
+
+                    var ppnCart = document.createElement("input");
+                    ppnCart.setAttribute("type", "hidden");
+                    ppnCart.setAttribute("name", "ppnCart[]");
+                    ppnCart.setAttribute("value", ppn); 
 
                     var nameCart = document.createElement("input");
                     nameCart.setAttribute("type", "hidden");
@@ -254,7 +268,14 @@
 
                     newDiskon = document.createElement('td'); 
                     newDiskon.appendChild(pDiskon); 
-                    newDiskon.appendChild(diskonCart); 
+                    newDiskon.appendChild(diskonCart);
+
+                    var pPPN = document.createElement("p");
+                    pPPN.innerHTML = ppn;
+
+                    newPPN = document.createElement('td'); 
+                    newPPN.appendChild(pPPN); 
+                    newPPN.appendChild(ppnCart); 
 
                     var pAmount = document.createElement("p");
                     pAmount.innerHTML = amount; 
@@ -275,7 +296,8 @@
 
                     newrow.appendChild(newname); 
                     newrow.appendChild(newmodal);
-                    newrow.appendChild(newDiskon); 
+                    newrow.appendChild(newDiskon);
+                    newrow.appendChild(newPPN); 
                     newrow.appendChild(newamount); 
                     newrow.appendChild(newbutton); 
                     parentel.appendChild(newrow); 
@@ -284,6 +306,7 @@
                     $('#txModalBaru').val('');
                     $('#txJumlahBaru').val('');
                     $('#txDiskonBaru').val('');
+                    $('#txPPNBaru').val('');
 
                     serviceId++; 
                 }

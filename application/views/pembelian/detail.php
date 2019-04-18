@@ -97,6 +97,7 @@
                                             <th >Nama Barang</th>
                                             <th >Harga Modal</th>
                                             <th >Diskon</th>
+                                            <th >PPN</th>
                                             <th >Jumlah</th>
                                             <th >Total</th>
                                             <th >Hapus</th>
@@ -109,7 +110,8 @@
                                                 $modal = $detail->Modal_Barang;
                                                 $jumlah = $detail->Jumlah;
                                                 $diskon = $detail->Diskon;
-                                                $total = ($modal - $diskon) * $jumlah;
+                                                $ppn = $detail->PPN;
+                                                $total = ($modal - $diskon + $ppn) * $jumlah;
                                                 $id = $detail->ID;
                                                 if($count%2==0) {
                                                     $class = "even";
@@ -126,6 +128,9 @@
                                                     echo "</td>";
                                                     echo '<td>';           
                                                     echo number_format($diskon);
+                                                    echo "</td>";
+                                                    echo '<td>';           
+                                                    echo number_format($ppn);
                                                     echo "</td>";
                                                     echo '<td>';
                                                     echo number_format($jumlah);

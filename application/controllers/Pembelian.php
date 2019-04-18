@@ -143,12 +143,14 @@ class Pembelian extends MY_Controller {
 					$modal = $_POST['modalCart'];
 					$name = $_POST['nameCart'];
 					$diskon = $_POST['diskonCart'];
+					$ppn = $_POST['ppnCart'];
 
 					for ($idx = 0; $idx < count($name); $idx++) {
 					    $amountbaru = $amount[$idx];
 					    $modalbaru = $modal[$idx];
 						$namabaru = $name[$idx];
 						$diskonbaru = $diskon[$idx];
+						$ppnbaru = $ppn[$idx];
 						
 						$temps = $this->Barang_model->check_exist($namabaru, $modalbaru);
 						if(!empty($temps)) {
@@ -160,9 +162,9 @@ class Pembelian extends MY_Controller {
 							$idbaru = $this->Barang_model->add_barang($namabaru, $modalbaru, $amountbaru);
 						}
 
-				    	$this->Pembelian_model->add_detail_pembelian($idbaru, $amountbaru, $headerid, $modalbaru, $namabaru, $diskonbaru);
+				    	$this->Pembelian_model->add_detail_pembelian($idbaru, $amountbaru, $headerid, $modalbaru, $namabaru, $diskonbaru, $ppnbaru);
 				    	
-				    	$total = $amountbaru * ($modalbaru - $diskonbaru);
+				    	$total = $amountbaru * ($modalbaru - $diskonbaru + $ppnbaru);
 				    	$grandTotal = $grandTotal + $total;
 					} 
 				}
