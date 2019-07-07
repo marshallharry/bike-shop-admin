@@ -50,7 +50,63 @@ class Pegawai extends MY_Controller {
 			$this->data['status'] = 'masuk';
 			$this->data['keterangan'] = '';
 		}
-
+		
+		if(isset($_POST['dateFrom']) && !empty($_POST['dateFrom']))
+		{
+			$dateFrom = $_POST['dateFrom'];
+			$_SESSION['dateFromAbsen'] = $dateFrom;
+		}
+		else if( isset($_SESSION['dateFromAbsen']) && !empty($_SESSION['dateFromAbsen']) )
+		{
+			$dateFrom = $_SESSION['dateFromAbsen'];
+		}
+		else
+		{
+			$dateFrom = date('Y-m-d');
+		}
+		
+		if( isset($_POST['dateTo']) && !empty($_POST['dateTo']) )
+		{
+			$dateTo = $_POST['dateTo'];
+			$_SESSION['dateToAbsen'] = $dateTo;
+		}
+		else if( isset($_SESSION['dateToAbsen']) && !empty($_SESSION['dateToAbsen']) )
+		{
+			$dateTo = $_SESSION['dateToAbsen'];
+		}
+		else
+		{
+			$dateTo = date('Y-m-d');
+		}
+		
+		if( isset($_POST['filterHutang']) && !empty($_POST['filterHutang']) )
+		{
+			$filterHutang = $_POST['filterHutang'];
+			$_SESSION['filterHutang'] = $filterHutang;
+		}
+		else if( isset($_SESSION['filterHutang']) && !empty($_SESSION['filterHutang']) )
+		{
+			$filterHutang = $_SESSION['filterHutang'];
+		}
+		else
+		{
+			$filterHutang = "";
+		}
+		
+		if( isset($_POST['filterHutangBarang']) && !empty($_POST['filterHutangBarang']) )
+		{
+			$filterHutangBarang = $_POST['filterHutangBarang'];
+			$_SESSION['filterHutangBarang'] = $filterHutangBarang;
+		}
+		else if( isset($_SESSION['filterHutangBarang']) && !empty($_SESSION['filterHutangBarang']) )
+		{
+			$filterHutangBarang = $_SESSION['filterHutangBarang'];
+		}
+		else
+		{
+			$filterHutangBarang = "";
+		}
+		
 		if(isset($_POST['dateFromAbsen']) && !empty($_POST['dateFromAbsen']))
 		{
 			$dateFromAbsen = $_POST['dateFromAbsen'];
@@ -81,21 +137,27 @@ class Pegawai extends MY_Controller {
 
 		$this->data['dateFromAbsen'] = $dateFromAbsen;
 		$this->data['dateToAbsen'] = $dateToAbsen;
-
+		$this->data['dateFrom'] = $dateFrom;
+		$this->data['dateTo'] = $dateTo;
+		$this->data['filterHutang'] = $filterHutang;
+		$this->data['filterHutangBarang'] = $filterHutangBarang;
+		
 		$this->data['tanggalHutang'] = date('Y-m-d');
 		$this->data['tanggalHutangBarang'] = date('Y-m-d');
 		$this->data['result'] = $this->Pegawai_model->get_pegawai($id);
-		$this->data['absensi'] = $this->Pegawai_model->get_absensi($id);
-		$this->data['hutang'] = $this->Pegawai_model->get_hutang($id);
-		$this->data['hutangBarang'] = $this->Pegawai_model->get_hutang_barang($id);
+		$this->data['absensi'] = $this->Pegawai_model->get_absensi($id, $dateFrom, $dateTo);
+		$this->data['hutang'] = $this->Pegawai_model->get_hutang($id, $filterHutang);
+		$this->data['hutangBarang'] = $this->Pegawai_model->get_hutang_barang($id, $filterHutangBarang);
 		$total = $this->Pegawai_model->get_total_absen($id, $dateFromAbsen, $dateToAbsen);
 		$this->data['totalMasuk'] = $total[0]->Total;
 
 		$hutang = $this->Pegawai_model->get_total_hutang($id);
 		$hutang_lunas = $this->Pegawai_model->get_hutang_lunas_per_month($id);
+		$hutang_barang_lunas = $this->Pegawai_model->get_hutang_barang_lunas_per_month($id);
+
 		$hutang_barang = $this->Pegawai_model->get_total_hutang_barang($id);
 		$this->data['totalHutang'] = $hutang[0]->Total + $hutang_barang[0]->Total;
-		$this->data['totalHutangLunas'] = $hutang_lunas[0]->Total;
+		$this->data['totalHutangLunas'] = $hutang_lunas[0]->Total+$hutang_barang_lunas[0]->Total;
 		$this->load->view('pegawai/edit',$this->data);
 	}
 
@@ -221,6 +283,9 @@ class Pegawai extends MY_Controller {
 		$headerid = $this->Penjualan_model->add_header_penjualan(date('Y-m-d'), $grandTotal);
 		$this->Penjualan_model->add_detail_penjualan($hutang->Barang_ID, $hutang->Jumlah, $hutang->Harga, $headerid, $hutang->Modal, $hutang->Nama_Barang);
 		$this->Penjualan_model->update_header_penjualan_total($headerid, $grandTotal, $grandModal);
+
+		$this->Pegawai_model->transact_lunas_hutang_barang($id, $grandTotal);
+
 		
 		redirect('/pegawai/edit/'.$pid, 'refresh');
 	}

@@ -121,8 +121,8 @@
                     <!-- /.panel -->
                 </div>
             </div>
-
-            <div class="row">
+			
+			<div class="row">
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -240,6 +240,22 @@
                         <div class="panel-heading">
                             Daftar Absensi
                         </div>
+						<div class="panel-body">
+							<div class="col-lg-3">
+								<form id="absenListForm" action="" method="post" role="form">
+									<div class="form-group">
+										<label>Dari</label>
+										<input class="form-control" id="dateFrom" name="dateFrom" value="<?= !empty($dateFrom)? $dateFrom : "" ?>">
+									</div>
+									<div class="form-group">
+										<label>Sampai</label>
+										<input class="form-control" id="dateTo" name="dateTo" value="<?= !empty($dateTo)? $dateTo : "" ?>" >
+									</div>
+									<button type="submit" class="btn btn-default">Submit</button>
+									<button type="reset" class="btn btn-default">Reset</button>
+								</form>
+							</div>
+						</div>
                         <!-- /.panel-heading -->
                         <?php           
                             if (!empty($absensi)){
@@ -304,6 +320,21 @@
                         <div class="panel-heading">
                             Daftar Hutang
                         </div>
+						<div class="panel-body">
+							<div class="col-lg-3">
+								<form id="getHutangForm" action="" method="post" role="form">
+									<div class="form-group">
+										<label>Tampilkan</label>
+										<select class="form-control" id="filterHutang" name="filterHutang" >
+                                            <option value="" <?= $filterHutang == "" ? "selected" : "" ?> >Semua</option>
+											<option value="belum" <?= $filterHutang == "belum" ? "selected" : "" ?> >Belum Lunas</option>
+											<option value="lunas" <?= $filterHutang == "lunas" ? "selected" : "" ?> >Sudah Lunas</option>
+                                        </select>
+									</div>
+									<button type="submit" class="btn btn-default">Submit</button>
+								</form>
+							</div>
+						</div>
                         <!-- /.panel-heading -->
                         <?php           
                             if (!empty($hutang)){
@@ -374,14 +405,14 @@
                                             echo "</tr>"; 
                                             $count++;    
                                         }
-                                        echo "<tr>";
-                                            echo '<td colspan="6">';
-                                            echo "<b>Total Sisa Hutang</b>";
-                                            echo "</td>";
-                                            echo "<td>";
-                                            echo number_format($total);
-                                            echo "</td>";
-                                        echo "</tr>";                   
+                                        //echo "<tr>";
+                                            //echo '<td colspan="6">';
+                                            //echo "<b>Total Sisa Hutang</b>";
+                                            //echo "</td>";
+                                            //echo "<td>";
+                                            //echo number_format($total);
+                                            //echo "</td>";
+                                        //echo "</tr>";                   
                                     ?>  
                                 </tbody>
                             </table>
@@ -403,6 +434,21 @@
                         <div class="panel-heading">
                             Daftar Hutang Barang
                         </div>
+						<div class="panel-body">
+							<div class="col-lg-3">
+								<form id="getHutangForm" action="" method="post" role="form">
+									<div class="form-group">
+										<label>Tampilkan</label>
+										<select class="form-control" id="filterHutangBarang" name="filterHutangBarang" >
+                                            <option value="" <?= $filterHutangBarang == "" ? "selected" : "" ?> >Semua</option>
+											<option value="belum" <?= $filterHutangBarang == "belum" ? "selected" : "" ?> >Belum Lunas</option>
+											<option value="lunas" <?= $filterHutangBarang == "lunas" ? "selected" : "" ?> >Sudah Lunas</option>
+                                        </select>
+									</div>
+									<button type="submit" class="btn btn-default">Submit</button>
+								</form>
+							</div>
+						</div>
                         <!-- /.panel-heading -->
                         <?php           
                             if (!empty($hutangBarang)){
@@ -568,8 +614,33 @@
         $( "#tanggal" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#tanggal_hutang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#tanggal_hutang_barang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
-        $( "#dateFromAbsen" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+		$( "#dateFrom" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+        $( "#dateTo" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+		$( "#dateFromAbsen" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#dateToAbsen" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+    
+        $("#absenListForm").validate({
+            rules: {                
+                dateFrom: {
+                    date: true
+                },
+                dateTo: {
+                    date: true
+                }
+            }
+        });
+		$("#totalAbsenForm").validate({
+            rules: {                
+                dateFromAbsen: {
+                    date: true,
+                    required: true
+                },
+                dateToAbsen: {
+                    date: true,
+                    required: true
+                }
+            }
+        });
         $("#editForm").validate({
             rules: {                
                 telp: {
@@ -587,18 +658,6 @@
         $("#absenForm").validate({
             rules: {                
                 tanggal: {
-                    date: true,
-                    required: true
-                }
-            }
-        });
-        $("#totalAbsenForm").validate({
-            rules: {                
-                dateFromAbsen: {
-                    date: true,
-                    required: true
-                },
-                dateToAbsen: {
                     date: true,
                     required: true
                 }

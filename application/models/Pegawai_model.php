@@ -66,9 +66,10 @@ class Pegawai_model extends CI_Model {
 		$this->db->insert('absensi', $param);
 	}
 
-	public function get_absensi($id)
+	public function get_absensi($id, $dateFrom, $dateTo)
 	{
-		$query = $this->db->get_where('absensi', array('Pegawai_ID' => $id));
+		$sql = "SELECT * FROM absensi a WHERE a.Pegawai_ID = $id AND a.Tanggal >= '$dateFrom' AND a.Tanggal <= '$dateTo' ";
+		$query = $this->db->query($sql);
 		$result = $query->result();		
 		
 		return $result;
@@ -99,9 +100,13 @@ class Pegawai_model extends CI_Model {
 		$this->db->insert('hutang', $param);
 	}
 
-	public function get_hutang($id)
+	public function get_hutang($id, $status)
 	{
-		$query = $this->db->get_where('hutang', array('Pegawai_ID' => $id));
+		$where = array('Pegawai_ID' => $id);
+		if($status != "") {
+			$where['Status'] = $status;
+		}
+		$query = $this->db->get_where('hutang', $where);
 		$result = $query->result();		
 		
 		return $result;
@@ -163,6 +168,17 @@ class Pegawai_model extends CI_Model {
 		return $query->result();
 	}
 
+	public function get_hutang_barang_lunas_per_month($id)
+	{
+		$sql = "SELECT SUM(t.Jumlah) AS Total FROM transaksi_lunas_hutang_barang t ".
+		" JOIN hutang_barang h ON h.ID = t.Hutang_Barang_ID ".
+		" WHERE h.Pegawai_ID = ".$id.
+		" AND MONTH(t.Tanggal) = MONTH(NOW()) ".
+		" AND YEAR(t.Tanggal) = YEAR(NOW()) ";
+		$query = $this->db->query($sql) ;
+		return $query->result();
+	}
+
 	public function remove_hutang($id) {
 		$this->db->delete('hutang', array('ID' => $id));
 	}
@@ -192,9 +208,23 @@ class Pegawai_model extends CI_Model {
 		$this->db->insert('transaksi_lunas_hutang', $param);
 	}
 
-	public function get_hutang_barang($id)
+	public function transact_lunas_hutang_barang($hutangId, $jumlah)
 	{
-		$query = $this->db->get_where('hutang_barang', array('Pegawai_ID' => $id));
+		$param = array(
+			'Hutang_Barang_ID' => $hutangId,
+			'Tanggal' => date('Y-m-d'),
+			'Jumlah' => $jumlah
+			);
+		$this->db->insert('transaksi_lunas_hutang_barang', $param);
+	}
+
+	public function get_hutang_barang($id, $status)
+	{
+		$where = array('Pegawai_ID' => $id);
+		if($status != "") {
+			$where['Status'] = $status;
+		}
+		$query = $this->db->get_where('hutang_barang', $where);
 		$result = $query->result();		
 		
 		return $result;
