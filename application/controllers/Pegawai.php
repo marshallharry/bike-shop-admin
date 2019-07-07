@@ -50,13 +50,45 @@ class Pegawai extends MY_Controller {
 			$this->data['status'] = 'masuk';
 			$this->data['keterangan'] = '';
 		}
+
+		if(isset($_POST['dateFromAbsen']) && !empty($_POST['dateFromAbsen']))
+		{
+			$dateFromAbsen = $_POST['dateFromAbsen'];
+			$_SESSION['dateFromAbsen'] = $dateFromAbsen;
+		}
+		else if( isset($_SESSION['dateFromAbsen']) && !empty($_SESSION['dateFromAbsen']) )
+		{
+			$dateFromAbsen = $_SESSION['dateFromAbsen'];
+		}
+		else
+		{
+			$dateFromAbsen = date('Y-m-d');
+		}
+		
+		if( isset($_POST['dateToAbsen']) && !empty($_POST['dateToAbsen']) )
+		{
+			$dateToAbsen = $_POST['dateToAbsen'];
+			$_SESSION['dateToAbsen'] = $dateToAbsen;
+		}
+		else if( isset($_SESSION['dateToAbsen']) && !empty($_SESSION['dateToAbsen']) )
+		{
+			$dateToAbsen = $_SESSION['dateToAbsen'];
+		}
+		else
+		{
+			$dateToAbsen = date('Y-m-d');
+		}
+
+		$this->data['dateFromAbsen'] = $dateFromAbsen;
+		$this->data['dateToAbsen'] = $dateToAbsen;
+
 		$this->data['tanggalHutang'] = date('Y-m-d');
 		$this->data['tanggalHutangBarang'] = date('Y-m-d');
 		$this->data['result'] = $this->Pegawai_model->get_pegawai($id);
 		$this->data['absensi'] = $this->Pegawai_model->get_absensi($id);
 		$this->data['hutang'] = $this->Pegawai_model->get_hutang($id);
 		$this->data['hutangBarang'] = $this->Pegawai_model->get_hutang_barang($id);
-		$total = $this->Pegawai_model->get_total_absen($id);
+		$total = $this->Pegawai_model->get_total_absen($id, $dateFromAbsen, $dateToAbsen);
 		$this->data['totalMasuk'] = $total[0]->Total;
 
 		$hutang = $this->Pegawai_model->get_total_hutang($id);

@@ -134,11 +134,11 @@ class Pegawai_model extends CI_Model {
 		$this->db->update('hutang', $param); 
 	}
 
-	public function get_total_absen($id)
+	public function get_total_absen($id, $from, $to)
 	{
 		$sql = "SELECT COUNT(a.ID) AS Total FROM absensi a ".
-				"WHERE a.Pegawai_ID = ".$id." AND MONTH(a.Tanggal) = MONTH(NOW()) ".
-				"AND YEAR(a.Tanggal) = YEAR(NOW()) ".
+				"WHERE a.Pegawai_ID = ".$id." AND a.Tanggal >= '$from' ".
+				"AND a.Tanggal <= '$to' ".
 				"AND a.Status = 'masuk' ";
 
 		$query = $this->db->query($sql);

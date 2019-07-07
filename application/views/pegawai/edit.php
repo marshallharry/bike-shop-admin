@@ -123,34 +123,51 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Total Masuk Bulan Ini : <?= $totalMasuk ?>
+                            Total Masuk Periode
                         </div>
                         <!-- /.panel-heading -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Total Hutang Belum Lunas : <?= number_format($totalHutang) ?>
+                        <div class="panel-body">
+                            <form id="totalAbsenForm" action="<?= $baseUrl ?>pegawai/edit/<?= $url ?>" method="post" role="form">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Dari</label>
+                                            <input class="form-control" id="dateFromAbsen" name="dateFromAbsen" value="<?= $dateFromAbsen ?>" >
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Total Masuk</label>
+                                            <input class="form-control" value="<?= $totalMasuk ?>" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Total Gaji</label>
+                                            <input class="form-control" value="<?= number_format($totalGaji) ?>" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Sampai</label>
+                                            <input class="form-control" id="dateToAbsen" name="dateToAbsen" value="<?= $dateToAbsen ?>" >
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Total Hutang Belum Lunas</label>
+                                            <input class="form-control" value="<?= number_format($totalHutang) ?>" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </form>
                         </div>
-                        <!-- /.panel-heading -->
+                        <!-- /.panel-body -->
                     </div>
-                    <!-- /.panel -->
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Total Gaji Bulan Ini : <?= number_format($totalGaji) ?>
-                        </div>
-                        <!-- /.panel-heading -->
-                    </div>
-                    <!-- /.panel -->
                 </div>
             </div>
 
@@ -551,6 +568,8 @@
         $( "#tanggal" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#tanggal_hutang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $( "#tanggal_hutang_barang" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+        $( "#dateFromAbsen" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
+        $( "#dateToAbsen" ).datepicker({dateFormat: "yy-mm-dd", maxDate: new Date, minDate: new Date(2007, 6, 12)});
         $("#editForm").validate({
             rules: {                
                 telp: {
@@ -568,6 +587,18 @@
         $("#absenForm").validate({
             rules: {                
                 tanggal: {
+                    date: true,
+                    required: true
+                }
+            }
+        });
+        $("#totalAbsenForm").validate({
+            rules: {                
+                dateFromAbsen: {
+                    date: true,
+                    required: true
+                },
+                dateToAbsen: {
                     date: true,
                     required: true
                 }

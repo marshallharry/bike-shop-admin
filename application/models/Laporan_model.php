@@ -26,11 +26,10 @@ class Laporan_model extends CI_Model {
 				"SELECT ".
 				"hp.Tanggal, ".
 				"SUM(dp.Harga * dp.Jumlah) AS Penjualan_Kotor, ".
-				"SUM(b.Modal * dp.Jumlah) AS Modal_Barang, ".
+				"SUM(dp.Modal * dp.Jumlah) AS Modal_Barang, ".
 				"0 AS Pengeluaran ".
 				"FROM header_penjualan hp ".
-				"JOIN detail_penjualan dp ON dp.Header_ID = hp.ID ".
-				"JOIN barang b on dp.Barang_ID = b.ID WHERE 1 ";
+				"JOIN detail_penjualan dp ON dp.Header_ID = hp.ID ";
 
 		if($dateFrom != null)
 		{
