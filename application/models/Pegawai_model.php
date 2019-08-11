@@ -157,24 +157,24 @@ class Pegawai_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function get_hutang_lunas_per_month($id)
+	public function get_hutang_lunas_per_month($id, $from, $to)
 	{
 		$sql = "SELECT SUM(t.Jumlah) AS Total FROM transaksi_lunas_hutang t ".
 		" JOIN hutang h ON h.ID = t.Hutang_ID ".
 		" WHERE h.Pegawai_ID = ".$id.
-		" AND MONTH(t.Tanggal) = MONTH(NOW()) ".
-		" AND YEAR(t.Tanggal) = YEAR(NOW()) ";
+		" AND t.Tanggal >= '$from' ".
+		" AND t.Tanggal <= '$to' ";
 		$query = $this->db->query($sql) ;
 		return $query->result();
 	}
 
-	public function get_hutang_barang_lunas_per_month($id)
+	public function get_hutang_barang_lunas_per_month($id, $from, $to)
 	{
 		$sql = "SELECT SUM(t.Jumlah) AS Total FROM transaksi_lunas_hutang_barang t ".
 		" JOIN hutang_barang h ON h.ID = t.Hutang_Barang_ID ".
 		" WHERE h.Pegawai_ID = ".$id.
-		" AND MONTH(t.Tanggal) = MONTH(NOW()) ".
-		" AND YEAR(t.Tanggal) = YEAR(NOW()) ";
+		" AND t.Tanggal >= '$from' ".
+		" AND t.Tanggal <= '$to' ";
 		$query = $this->db->query($sql) ;
 		return $query->result();
 	}
@@ -249,7 +249,7 @@ class Pegawai_model extends CI_Model {
 
 	public function get_total_hutang_barang($id)
 	{
-		$sql = " SELECT SUM(h.Harga) AS Total FROM `hutang_barang` h WHERE h.Pegawai_ID = ".$id." AND h.Status = 'belum' ";
+		$sql = " SELECT SUM(h.Harga * h.Jumlah) AS Total FROM `hutang_barang` h WHERE h.Pegawai_ID = ".$id." AND h.Status = 'belum' ";
 		$query = $this->db->query($sql);
 		return $query->result();
 	}

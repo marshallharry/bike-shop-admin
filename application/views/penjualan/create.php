@@ -166,15 +166,6 @@
     <script src="<?php echo base_url(); ?>assets/js/jquery-validation-custom.js"></script>
     <script>
         var serviceId = 1;
-        let cartItems = {};
-
-        function checkCartExist(nama, modal) {
-            const obj = cartItems[`${nama}-${modal}`];
-            return obj === undefined ? {
-                id: 0,
-                amount: 0
-            } : obj;
-        }
 
         function addtocartBaru() { 
             id = serviceId;        
@@ -227,15 +218,11 @@
                         amount = parseInt(amountStr);
                     }
 
-                    const obj = checkCartExist(nama, modal);
-                    amount += obj.amount;
-
                     if (amount > stock) {
                         alert("Stok tidak mencukupi.");
                     } else {
                         harga = parseFloat(hargaStr);
                         total = amount * harga;
-                        id = obj.id > 0 ? obj.id : id;
 
                         var parentel = document.getElementById('itemlist'); 
                         newrow = document.createElement('tr'); 
@@ -313,15 +300,7 @@
                         $('#txJualBaru').val('');
                         $('#txStokBaru').val('');
 
-                        if (obj.id === 0) {
-                            serviceId++;
-                            cartItems[`${nama}-${modal}`] = {
-                                id: id,
-                                amount: amount
-                            };
-                        } else {
-                            $('#trCartBaru'+id).remove();
-                        }
+                        serviceId++;
                         parentel.appendChild(newrow);
                     }
                 }

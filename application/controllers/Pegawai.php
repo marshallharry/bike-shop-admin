@@ -152,8 +152,8 @@ class Pegawai extends MY_Controller {
 		$this->data['totalMasuk'] = $total[0]->Total;
 
 		$hutang = $this->Pegawai_model->get_total_hutang($id);
-		$hutang_lunas = $this->Pegawai_model->get_hutang_lunas_per_month($id);
-		$hutang_barang_lunas = $this->Pegawai_model->get_hutang_barang_lunas_per_month($id);
+		$hutang_lunas = $this->Pegawai_model->get_hutang_lunas_per_month($id, $dateFromAbsen, $dateToAbsen);
+		$hutang_barang_lunas = $this->Pegawai_model->get_hutang_barang_lunas_per_month($id, $dateFromAbsen, $dateToAbsen);
 
 		$hutang_barang = $this->Pegawai_model->get_total_hutang_barang($id);
 		$this->data['totalHutang'] = $hutang[0]->Total + $hutang_barang[0]->Total;
